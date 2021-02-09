@@ -19,38 +19,39 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log('submit');
 
-    // const { user, session, error } = await supabase.auth.signUp({
-    //   email,
-    //   password,
-    // });
+    const { user, session, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
-    // console.log(email);
-    // console.log('user', user);
-    // console.log('session', session);
-    // console.log(error);
+    setEmail('');
+    setPassword('');
   };
 
   return (
     <Container maxW='xl' centerContent>
       <Heading>Welcome To Pakiki</Heading>
       <Box minWidth='700px'>
-        <FormControl id='email' onSubmit={handleSubmit}>
-          <FormLabel>Email address</FormLabel>
-          <Input
-            type='email'
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-          <FormLabel>Password</FormLabel>
-          <Input
-            type='password'
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
+        <form action='' onSubmit={handleSubmit}>
+          <FormControl id='email' isRequired>
+            <FormLabel>Email address</FormLabel>
+            <Input
+              type='email'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id='password' isRequired>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type='password'
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
+          </FormControl>
           <Button
             mt={4}
             colorScheme='teal'
@@ -59,7 +60,7 @@ export default function Home() {
           >
             Submit
           </Button>
-        </FormControl>
+        </form>
       </Box>
     </Container>
   );
