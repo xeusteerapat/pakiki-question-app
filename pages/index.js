@@ -1,65 +1,66 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import React, { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import {
+  Box,
+  Container,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  Button,
+  Heading,
+} from '@chakra-ui/react';
 
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
 export default function Home() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log('submit');
+
+    // const { user, session, error } = await supabase.auth.signUp({
+    //   email,
+    //   password,
+    // });
+
+    // console.log(email);
+    // console.log('user', user);
+    // console.log('session', session);
+    // console.log(error);
+  };
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
+    <Container maxW='xl' centerContent>
+      <Heading>Welcome To Pakiki</Heading>
+      <Box minWidth='700px'>
+        <FormControl id='email' onSubmit={handleSubmit}>
+          <FormLabel>Email address</FormLabel>
+          <Input
+            type='email'
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          <FormLabel>Password</FormLabel>
+          <Input
+            type='password'
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+          <Button
+            mt={4}
+            colorScheme='teal'
+            // isLoading={props.isSubmitting}
+            type='submit'
           >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+            Submit
+          </Button>
+        </FormControl>
+      </Box>
+    </Container>
+  );
 }
