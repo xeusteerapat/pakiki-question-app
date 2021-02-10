@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import {
   Box,
   Container,
@@ -10,11 +9,8 @@ import {
   Button,
   Heading,
 } from '@chakra-ui/react';
+import { supabase } from '../utils/supabase';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
 export default function Home() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,6 +22,8 @@ export default function Home() {
       email,
       password,
     });
+
+    console.log(user);
 
     setEmail('');
     setPassword('');
@@ -42,6 +40,7 @@ export default function Home() {
               type='email'
               value={email}
               onChange={e => setEmail(e.target.value)}
+              required
             />
           </FormControl>
           <FormControl id='password' isRequired>
@@ -50,6 +49,7 @@ export default function Home() {
               type='password'
               value={password}
               onChange={e => setPassword(e.target.value)}
+              required
             />
           </FormControl>
           <Button
@@ -58,7 +58,7 @@ export default function Home() {
             // isLoading={props.isSubmitting}
             type='submit'
           >
-            Submit
+            Login
           </Button>
         </form>
       </Box>
