@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import {
   Box,
   Container,
   FormControl,
   FormLabel,
-  FormErrorMessage,
   Input,
   Button,
   Heading,
 } from '@chakra-ui/react';
 import { supabase } from '../utils/supabase';
 
-export default function Login() {
+export default function SignUp() {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -25,22 +23,25 @@ export default function Login() {
       password,
     });
 
-    console.log(user);
-
+    setUsername('');
     setEmail('');
     setPassword('');
   };
 
-  const router = useRouter();
-  const redirect = () => {
-    router.push('/');
-  };
-
   return (
     <Container maxW='xl' centerContent mt={10}>
-      <Heading>Welcome To Pakiki</Heading>
+      <Heading>Sign Up to Pakiki</Heading>
       <Box minWidth='700px'>
         <form action='' onSubmit={handleSubmit}>
+          <FormControl id='username' isRequired>
+            <FormLabel>Username</FormLabel>
+            <Input
+              type='text'
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+            />
+          </FormControl>
           <FormControl id='email' isRequired>
             <FormLabel>Email address</FormLabel>
             <Input
@@ -65,9 +66,8 @@ export default function Login() {
             // isLoading={props.isSubmitting}
             type='submit'
           >
-            Login
-          </Button>{' '}
-          or <NextLink href='signup'>SignUp</NextLink>
+            Sign Up
+          </Button>
         </form>
       </Box>
     </Container>
