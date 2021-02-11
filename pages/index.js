@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import {
   Box,
   Container,
@@ -29,11 +28,6 @@ export default function Login() {
 
     setEmail('');
     setPassword('');
-  };
-
-  const router = useRouter();
-  const redirect = () => {
-    router.push('/');
   };
 
   return (
@@ -67,7 +61,7 @@ export default function Login() {
           >
             Login
           </Button>{' '}
-          or <NextLink href='signup'>SignUp</NextLink>
+          or <NextLink href='/'>SignUp</NextLink>
         </form>
       </Box>
     </Container>
