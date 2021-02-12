@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Box,
   Container,
@@ -15,10 +16,12 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const router = useRouter();
+
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const { user, session, error } = await supabase.auth.signUp({
+    await supabase.auth.signUp({
       email,
       password,
     });
@@ -26,6 +29,8 @@ export default function SignUp() {
     setUsername('');
     setEmail('');
     setPassword('');
+
+    router.push('/profile');
   };
 
   return (

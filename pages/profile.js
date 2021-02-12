@@ -5,16 +5,30 @@ import styled from '@emotion/styled';
 
 import { supabase } from '../utils/supabase';
 
-const Profile = ({ user }) => {
-  const StickyNav = styled(Flex)`
-    position: sticky;
-    z-index: 10;
-    top: 0;
-    backdrop-filter: saturate(180%) blur(20px);
-    transition: height 0.5s, line-height 0.5s;
-  `;
+import useSWR from 'swr';
 
-  console.log(user);
+const StickyNav = styled(Flex)`
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  backdrop-filter: saturate(180%) blur(20px);
+  transition: height 0.5s, line-height 0.5s;
+`;
+
+const fetchUser = (url, token) =>
+  fetch(url, {
+    method: 'GET',
+    headers: new Headers({ 'Content-Type': 'application/json', token }),
+    credentials: 'same-origin',
+  }).then(res => res.json());
+
+const Profile = () => {
+  const session = supabase.auth.session();
+
+  const { data, error } = useSWR(
+    session ? ['/api/getUser', session.access_token] : null,
+    fetchUser
+  );
 
   return (
     <>
@@ -38,11 +52,15 @@ const Profile = ({ user }) => {
               Home
             </Button>
           </NextLink>
-          <NextLink href='/blog' passHref>
-            <Button as='a' variant='ghost' p={[1, 2, 4]}>
-              {!user ? 'No User' : user}
-            </Button>
-          </NextLink>
+          {error && <p>error fetch user</p>}
+          {!data && <p>loading...</p>}
+          {data && (
+            <NextLink href='/blog' passHref>
+              <Button as='a' variant='ghost' p={[1, 2, 4]}>
+                {data.email}
+              </Button>
+            </NextLink>
+          )}
         </Box>
       </StickyNav>
     </>
@@ -50,15 +68,3 @@ const Profile = ({ user }) => {
 };
 
 export default Profile;
-
-export async function getServerSideProps({ req }) {
-  const { user } = await supabase.auth.api.getUserByCookie(req);
-
-  if (!user) {
-    // If no user, redirect to index.
-    return { props: {}, redirect: { destination: '/', permanent: false } };
-  }
-
-  // If there is a user, return it.
-  return { props: { user } };
-}
