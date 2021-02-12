@@ -11,23 +11,22 @@ import {
   Heading,
 } from '@chakra-ui/react';
 import { supabase } from '../utils/supabase';
+import { useRouter } from 'next/router';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const { user, session, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    console.log(user);
+    await supabase.auth.signIn({ email, password });
 
     setEmail('');
     setPassword('');
+
+    router.push('/profile');
   };
 
   return (
