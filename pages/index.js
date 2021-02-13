@@ -9,6 +9,8 @@ import {
   Input,
   Button,
   Heading,
+  Flex,
+  Center,
 } from '@chakra-ui/react';
 import { supabase } from '../utils/supabase';
 import { useRouter } from 'next/router';
@@ -52,15 +54,23 @@ export default function Login() {
               required
             />
           </FormControl>
-          <Button
-            mt={4}
-            colorScheme='teal'
-            // isLoading={props.isSubmitting}
-            type='submit'
-          >
-            Login
-          </Button>{' '}
-          or <NextLink href='/'>SignUp</NextLink>
+          <Flex alignItems='center' justifyContent='center'>
+            <Box>
+              <Button mt={4} colorScheme='teal' type='submit'>
+                Login
+              </Button>
+            </Box>
+            <Box mt={4} ml={2} mr={2}>
+              or
+            </Box>
+            <Box>
+              <NextLink href='/signup'>
+                <Button mt={4} colorScheme='blue'>
+                  SignUp
+                </Button>
+              </NextLink>
+            </Box>
+          </Flex>
         </form>
       </Box>
     </Container>

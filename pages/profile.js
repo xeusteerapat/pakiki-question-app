@@ -31,10 +31,6 @@ export default function Profile() {
     fetchUser
   );
 
-  if (!session) {
-    router.push('/');
-  }
-
   const handleLogout = () => {
     const { error } = supabase.auth.signOut();
 
@@ -74,13 +70,11 @@ export default function Profile() {
             </Button>
           )}
           {data && (
-            <NextLink href='/blog' passHref>
-              <Button as='a' variant='ghost' p={[1, 2, 4]}>
-                {data.email}
-              </Button>
-            </NextLink>
+            <Button as='a' variant='ghost' p={[1, 2, 4]}>
+              {data.email}
+            </Button>
           )}
-          <Button as='a' variant='ghost' p={[1, 2, 4]} onClick={handleLogout}>
+          <Button variant='ghost' p={[1, 2, 4]} onClick={handleLogout}>
             Log Out
           </Button>
         </Box>
