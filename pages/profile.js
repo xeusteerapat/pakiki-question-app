@@ -2,10 +2,10 @@ import React from 'react';
 import { Button, Flex, Box } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import styled from '@emotion/styled';
+import useSWR from 'swr';
 
 import { supabase } from '../utils/supabase';
-
-import useSWR from 'swr';
+import { useRouter } from 'next/router';
 
 const StickyNav = styled(Flex)`
   position: sticky;
@@ -22,13 +22,28 @@ const fetchUser = (url, token) =>
     credentials: 'same-origin',
   }).then(res => res.json());
 
-const Profile = () => {
+export default function Profile() {
   const session = supabase.auth.session();
+  const router = useRouter();
 
   const { data, error } = useSWR(
     session ? ['/api/getUser', session.access_token] : null,
     fetchUser
   );
+
+  if (!session) {
+    router.push('/');
+  }
+
+  const handleLogout = () => {
+    const { error } = supabase.auth.signOut();
+
+    if (error) {
+      return error;
+    } else {
+      router.push('/');
+    }
+  };
 
   return (
     <>
@@ -53,7 +68,11 @@ const Profile = () => {
             </Button>
           </NextLink>
           {error && <p>error fetch user</p>}
-          {!data && <p>loading...</p>}
+          {!data && (
+            <Button as='a' variant='ghost' p={[1, 2, 4]} isLoading>
+              Loading
+            </Button>
+          )}
           {data && (
             <NextLink href='/blog' passHref>
               <Button as='a' variant='ghost' p={[1, 2, 4]}>
@@ -61,10 +80,11 @@ const Profile = () => {
               </Button>
             </NextLink>
           )}
+          <Button as='a' variant='ghost' p={[1, 2, 4]} onClick={handleLogout}>
+            Log Out
+          </Button>
         </Box>
       </StickyNav>
     </>
   );
-};
-
-export default Profile;
+}
