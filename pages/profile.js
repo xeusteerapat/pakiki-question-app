@@ -31,8 +31,8 @@ export default function Profile() {
     fetchUser
   );
 
-  const handleLogout = () => {
-    const { error } = supabase.auth.signOut();
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
 
     if (error) {
       return error;
@@ -70,7 +70,7 @@ export default function Profile() {
             </Button>
           )}
           {data && (
-            <Button as='a' variant='ghost' p={[1, 2, 4]}>
+            <Button variant='ghost' p={[1, 2, 4]}>
               {data.email}
             </Button>
           )}
