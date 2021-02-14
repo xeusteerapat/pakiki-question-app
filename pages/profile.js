@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Flex, Box } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import { Button, Flex, Box, Image } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import styled from '@emotion/styled';
 import useSWR from 'swr';
@@ -41,6 +41,15 @@ export default function Profile() {
     }
   };
 
+  useEffect(async () => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .match({ email: session.user.email });
+
+    const [currentUser] = data;
+  }, []);
+
   return (
     <>
       <StickyNav
@@ -79,6 +88,28 @@ export default function Profile() {
           </Button>
         </Box>
       </StickyNav>
+      <Box
+        flexDirection='row'
+        justifyContent='space-between'
+        alignItems='center'
+        maxWidth='800px'
+        minWidth='356px'
+        width='100%'
+        px={[2, 6, 6]}
+        py={2}
+        mt={8}
+        mb={[0, 0, 8]}
+        mx='auto'
+      >
+        <Box boxSize='sm'>
+          <Image
+            borderRadius='full'
+            boxSize='150px'
+            src='https://bit.ly/sage-adebayo'
+            alt='Segun Adebayo'
+          />
+        </Box>
+      </Box>
     </>
   );
 }

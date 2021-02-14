@@ -12,8 +12,8 @@ import {
 import { supabase } from '../utils/supabase';
 
 export default function SignUp() {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
 
   const router = useRouter();
@@ -21,16 +21,26 @@ export default function SignUp() {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    setUsername('');
-    setEmail('');
-    setPassword('');
+      const newUser = await supabase
+        .from('users')
+        .insert([{ fullname, email, avatar: 'teerapat prommarak' }]);
 
-    router.push('/profile');
+      setFullname('');
+      setEmail('');
+      setPassword('');
+
+      setTimeout(() => {
+        router.push('/profile');
+      }, 5000);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -38,12 +48,12 @@ export default function SignUp() {
       <Heading>Sign Up to Pakiki</Heading>
       <Box minWidth='700px'>
         <form action='' onSubmit={handleSubmit}>
-          <FormControl id='username' isRequired>
-            <FormLabel>Username</FormLabel>
+          <FormControl id='fullname' isRequired>
+            <FormLabel>Fullname</FormLabel>
             <Input
               type='text'
-              value={username}
-              onChange={e => setUsername(e.target.value)}
+              value={fullname}
+              onChange={e => setFullname(e.target.value)}
               required
             />
           </FormControl>
