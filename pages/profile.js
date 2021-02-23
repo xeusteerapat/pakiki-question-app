@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, Flex, Box, Image } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Button, Flex, Box, Heading, Text } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import styled from '@emotion/styled';
 import useSWR from 'swr';
@@ -25,11 +25,22 @@ const fetchUser = (url, token) =>
 export default function Profile() {
   const session = supabase.auth.session();
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState({});
 
   const { data, error } = useSWR(
     session ? ['/api/getUser', session.access_token] : null,
     fetchUser
   );
+
+  useEffect(async () => {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .match({ email: session.user.email });
+
+    const [currentUser] = data;
+    setCurrentUser(currentUser);
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -40,15 +51,6 @@ export default function Profile() {
       router.push('/');
     }
   };
-
-  useEffect(async () => {
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .match({ email: session.user.email });
-
-    const [currentUser] = data;
-  }, []);
 
   return (
     <>
@@ -101,13 +103,15 @@ export default function Profile() {
         mb={[0, 0, 8]}
         mx='auto'
       >
-        <Box boxSize='sm'>
-          <Image
-            borderRadius='full'
-            boxSize='150px'
-            src='https://bit.ly/sage-adebayo'
-            alt='Segun Adebayo'
-          />
+        <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden'>
+          <Box m='5' as='a' href='/blog-post-thing'>
+            <Heading m='5' mb='0' as='h4' size='md'>
+              Blog Post by {currentUser.fullname}
+            </Heading>
+            <Text m='5' mt='0'>
+              My cool blog post
+            </Text>
+          </Box>
         </Box>
       </Box>
     </>
